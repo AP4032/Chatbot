@@ -2,6 +2,7 @@ package org.aryanoor.services;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
@@ -9,7 +10,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
- * The OpenRouterChat class provides functionality to communicate with the DeepSeek API.
+ * The OpenRouterChat class provides functionality to communicate with the
+ * DeepSeek API.
  * It sends a user prompt to the API and retrieves a chatbot-generated response.
  */
 public class OpenRouterChat {
@@ -37,7 +39,7 @@ public class OpenRouterChat {
      */
     public String sendChatRequest(String question) throws IOException {
         // Create a connection to the API URL
-        URL url = new URL(apiUrl);
+        URL url = URI.create(apiUrl).toURL();
         HttpURLConnection conn = getHttpURLConnection(question, url);
 
         // Read the API response
@@ -78,7 +80,8 @@ public class OpenRouterChat {
      * Extracts the chatbot's response message from the JSON API response.
      *
      * @param jsonResponse The JSON response from the API.
-     * @return The chatbot's response message as a String, or an error message if extraction fails.
+     * @return The chatbot's response message as a String, or an error message if
+     *         extraction fails.
      */
     private String extractMessage(String jsonResponse) {
         try {
@@ -105,12 +108,13 @@ public class OpenRouterChat {
      * This method is intentionally left empty for students to implement.
      *
      * Assignment Task:
-     * - If the chatbot response is null, the method should retry sending the prompt.
+     * - If the chatbot response is null, the method should retry sending the
+     * prompt.
      * - Consider setting a maximum number of retries to avoid infinite loops.
      * - Implement logging or console messages to indicate when a retry occurs.
      */
     private void nullResponseHandler() {
         // TODO: You should implement retry logic here.
-        //       This method will be called when the response is empty.
+        // This method will be called when the response is empty.
     }
 }

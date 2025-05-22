@@ -9,7 +9,8 @@ import java.io.IOException;
 public class Main {
 
     /**
-     * The main method starts the application by creating an instance of the CLI class.
+     * The main method starts the application by creating an instance of the CLI
+     * class.
      *
      * @param args Command-line arguments (not used in this application).
      * @throws IOException If an error occurs during input or file operations.
