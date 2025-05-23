@@ -334,14 +334,4 @@ public class GUI {
         label.setForeground(PRIMARY_COLOR);
         return label;
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            try {
-                new GUI(new CLI());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
 }
