@@ -71,7 +71,7 @@ class CLI {
             System.out.print("Enter password: ");
             String password = reader.readLine();
             IAM newUser = new IAM(username, password);
-            newUser.signUp();
+            newUser.signUp(username,password);
         }
 
         System.out.println(">Hello Again! Let's login to your account");
