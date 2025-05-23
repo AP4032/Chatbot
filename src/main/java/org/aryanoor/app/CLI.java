@@ -4,18 +4,22 @@ import org.aryanoor.services.IAM;
 import org.aryanoor.services.OpenRouterChat;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.Properties;
 
 /**
- * The CLI class provides a command-line interface for user authentication and chatbot interaction.
- * It loads API configurations, manages user login, and facilitates chatbot communication.
+ * The CLI class provides a command-line interface for user authentication and
+ * chatbot interaction.
+ * It loads API configurations, manages user login, and facilitates chatbot
+ * communication.
  */
-class CLI {
+public class CLI {
 
     private String apiUrl; // API URL for chatbot
     private String apiKey; // API key for authentication
@@ -38,21 +42,28 @@ class CLI {
      */
     private void loadConfig() throws IOException {
         Properties properties = new Properties();
-        if (Files.exists(Paths.get(CONFIG_FILE))) {
-            List<String> lines = Files.readAllLines(Paths.get(CONFIG_FILE));
-            for (String line : lines) {
-                String[] parts = line.split("=", 2);
-                if (parts.length == 2) {
-                    if (parts[0].trim().equalsIgnoreCase("apiUrl")) {
-                        apiUrl = parts[1].trim();
-                    } else if (parts[0].trim().equalsIgnoreCase("apiKey")) {
-                        apiKey = parts[1].trim();
-                    }
+        Path configPath = Paths.get(CONFIG_FILE);
+
+        if (Files.exists(configPath)) {
+            try (InputStream input = Files.newInputStream(configPath)) {
+                properties.load(input);
+                apiUrl = properties.getProperty("apiUrl");
+                apiKey = properties.getProperty("apiKey");
+
+                // Validation
+                if (apiUrl == null || apiUrl.isBlank()) {
+                    throw new IOException("apiUrl is missing in config.properties");
                 }
+                if (apiKey == null || apiKey.isBlank()) {
+                    throw new IOException("apiKey is missing in config.properties");
+                }
+
+                System.out.println("Config loaded successfully");
+                System.out.println("API URL: " + apiUrl);
+                System.out.println("API Key: " + (apiKey != null ? "*****" : "null"));
             }
         } else {
-            System.out.println("Configuration file not found. Please create 'config.properties' with apiUrl and apiKey.");
-            System.exit(1);
+            throw new FileNotFoundException("config.properties not found at: " + configPath.toAbsolutePath());
         }
     }
 
@@ -124,7 +135,6 @@ class CLI {
         return null;
     }
 
-
     /**
      * Counts the number of words in a given string.
      *
@@ -132,7 +142,16 @@ class CLI {
      * @return The number of words in the string.
      */
     private int countWords(String input) {
-        // TODO: Implement the countWords and use it for counting question and response words.
+        // TODO: Implement the countWords and use it for counting question and response
+        // words.
         return 0;
+    }
+
+    public String getApiUrl() {
+        return apiUrl;
+    }
+
+    public String getApiKey() {
+        return apiKey;
     }
 }
