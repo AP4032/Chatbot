@@ -84,11 +84,6 @@ public class GUI {
         styleFormLabel(passwordLabel);
         JPasswordField passwordField = createPasswordField();
 
-        // Remember me
-        JCheckBox rememberMe = new JCheckBox("Remember me");
-        rememberMe.setBackground(SECONDARY_COLOR);
-        rememberMe.setAlignmentX(Component.LEFT_ALIGNMENT);
-
         formPanel.add(usernameLabel);
         formPanel.add(Box.createVerticalStrut(5));
         formPanel.add(usernameField);
@@ -97,7 +92,6 @@ public class GUI {
         formPanel.add(Box.createVerticalStrut(5));
         formPanel.add(passwordField);
         formPanel.add(Box.createVerticalStrut(10));
-        formPanel.add(rememberMe);
 
         panel.add(formPanel);
         panel.add(Box.createVerticalStrut(20));
@@ -112,14 +106,15 @@ public class GUI {
             try {
                 IAM user = new IAM(username, password);
                 if (user.login(username, password)) {
+                    JOptionPane.showMessageDialog(frame, "Login successful!", "Login", JOptionPane.PLAIN_MESSAGE);
                     cardLayout.show(cardPanel, "CHAT");
                 } else {
-                    JOptionPane.showMessageDialog(frame, "Invalid credentials",
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(frame, "Wrong credentials");
+                    usernameField.setText("");
+                    passwordField.setText("");
                 }
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(frame, "Login error: " + ex.getMessage(),
-                        "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(frame, "Login error: " + ex.getMessage());
             }
         });
         panel.add(loginBtn);
@@ -194,17 +189,11 @@ public class GUI {
 
             try {
                 IAM user = new IAM(username, password);
-                if (user.signUp()) {
-                    JOptionPane.showMessageDialog(frame, "Registration successful!",
-                            "Success", JOptionPane.INFORMATION_MESSAGE);
-                    cardLayout.show(cardPanel, "LOGIN");
-                } else {
-                    JOptionPane.showMessageDialog(frame, "Username already exists",
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                }
+                user.signUp();
+                JOptionPane.showMessageDialog(frame, "Registration successful!");
+                cardLayout.show(cardPanel, "LOGIN");
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage(),
-                        "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage());
             }
         });
         panel.add(registerBtn);
