@@ -1,5 +1,6 @@
 package org.aryanoor.app;
 
+import javax.swing.*;
 import java.io.IOException;
 
 /**
@@ -15,6 +16,11 @@ public class Main {
      * @throws IOException If an error occurs during input or file operations.
      */
     public static void main(String[] args) throws IOException {
-        new CLI().run(); // Starts the CLI-based chatbot interface
+        SwingUtilities.invokeLater(() -> {
+            try {
+                new GUI();
+            } catch (IOException ex) {
+            }
+        });
     }
 }
