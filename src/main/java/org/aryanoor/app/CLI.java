@@ -1,8 +1,5 @@
 package org.aryanoor.app;
 
-import org.aryanoor.services.IAM;
-import org.aryanoor.services.OpenRouterChat;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,11 +8,14 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Properties;
 
+import org.aryanoor.services.IAM;
+import org.aryanoor.services.OpenRouterChat;
+
 /**
  * The CLI class provides a command-line interface for user authentication and chatbot interaction.
  * It loads API configurations, manages user login, and facilitates chatbot communication.
  */
-class CLI {
+class CLI  {
 
     private String apiUrl; // API URL for chatbot
     private String apiKey; // API key for authentication
