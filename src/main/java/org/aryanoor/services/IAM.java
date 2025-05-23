@@ -6,94 +6,72 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.List;
 
-/**
- * The IAM (Identity and Access Management) class provides basic authentication services.
- * It allows users to sign up and log in using a hashed password mechanism.
- */
 public class IAM {
+    private final String username;
+    private final String hashedPassword;
+    private static final String DATA_FILE = "user.data";
+    private static final int SALT_LENGTH = 16;
 
-    private final String name; // Stores the username
-    private final String password; // Stores the hashed password
-    private static final String DATA_FILE = "user.data"; // File to store user credentials
-
-    /**
-     * Constructor for IAM.
-     *
-     * @param name     The username of the user.
-     * @param password The plaintext password, which will be hashed before storing.
-     */
-    public IAM(String name, String password) {
-        this.name = name;
-        this.password = hashPassword(password);
+    public IAM(String username, String password) {
+        this.username = username;
+        this.hashedPassword = hashPassword(password, generateSalt());
     }
 
-    /**
-     * Hashes the provided password using the SHA-256 algorithm.
-     *
-     * @param password The plaintext password.
-     * @return The hashed password as a hexadecimal string.
-     */
-    private String hashPassword(String password) {
+    private String generateSalt() {
+        byte[] salt = new byte[SALT_LENGTH];
+        new SecureRandom().nextBytes(salt);
+        return Base64.getEncoder().encodeToString(salt);
+    }
+
+    private String hashPassword(String password, String salt) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
+            md.update(salt.getBytes());
             byte[] hashedBytes = md.digest(password.getBytes());
-            StringBuilder sb = new StringBuilder();
-            for (byte b : hashedBytes) {
-                sb.append(String.format("%02x", b));
-            }
-            return sb.toString();
+            return Base64.getEncoder().encodeToString(hashedBytes);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("Error hashing password", e);
         }
     }
 
-    /**
-     * Registers a new user by saving their credentials to a file.
-     * If the file already exists, it will be overwritten with the new credentials.
-     *
-     * @throws IOException If an error occurs while writing to the file.
-     */
-    public void signUp() throws IOException {
-        String userData = name + "," + password;
-        Files.write(Paths.get(DATA_FILE), userData.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-        System.out.println("User registered successfully!\n");
+    public boolean signUp() throws IOException {
+        if (userExists(username)) {
+            return false;
+        }
+
+        String userData = username + "," + hashedPassword + "\n";
+        Files.write(Paths.get(DATA_FILE), userData.getBytes(),
+                StandardOpenOption.CREATE,
+                StandardOpenOption.APPEND);
+        return true;
     }
 
-    /**
-     * Authenticates a user by verifying their name and password.
-     *
-     * @param name           The username to log in.
-     * @param enteredPassword The plaintext password entered by the user.
-     * @return True if authentication is successful, false otherwise.
-     * @throws IOException If an error occurs while reading from the file.
-     */
-    public boolean login(String name, String enteredPassword) throws IOException {
-        // Check if the user data file exists
+    public boolean login(String username, String password) throws IOException {
         if (!Files.exists(Paths.get(DATA_FILE))) {
-            System.out.println("No registered user found.");
             return false;
         }
 
-        // Read stored credentials from file
         List<String> lines = Files.readAllLines(Paths.get(DATA_FILE));
-        if (lines.isEmpty()) return false;
+        for (String line : lines) {
+            String[] parts = line.split(",");
+            if (parts.length == 2 && parts[0].equals(username)) {
+                String storedHash = parts[1];
+                String computedHash = hashPassword(password, parts[1]);
+                return storedHash.equals(computedHash);
+            }
+        }
+        return false;
+    }
 
-        String[] userData = lines.get(0).split(",");
-        if (userData.length != 2) return false;
-
-        String storedName = userData[0];
-        String storedHashedPassword = userData[1];
-        String enteredHashedPassword = hashPassword(enteredPassword);
-
-        // Validate user credentials
-        if (storedHashedPassword.equals(enteredHashedPassword) && storedName.equals(name)) {
-            System.out.println("Login successful!\n");
-            return true;
-        } else {
-            System.out.println("Invalid credentials.");
+    private boolean userExists(String username) throws IOException {
+        if (!Files.exists(Paths.get(DATA_FILE))) {
             return false;
         }
+        return Files.lines(Paths.get(DATA_FILE))
+                .anyMatch(line -> line.startsWith(username + ","));
     }
 }
