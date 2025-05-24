@@ -17,8 +17,8 @@ import java.util.Properties;
  */
 class CLI {
 
-    private String apiUrl; // API URL for chatbot
-    private String apiKey; // API key for authentication
+    public String apiUrl; // API URL for chatbot
+    public String apiKey; // API key for authentication
     private static final String CONFIG_FILE = "config.properties"; // Configuration file path
 
     /**
@@ -36,7 +36,7 @@ class CLI {
      *
      * @throws IOException If an error occurs while reading the file.
      */
-    private void loadConfig() throws IOException {
+    public void loadConfig() throws IOException {
         Properties properties = new Properties();
         if (Files.exists(Paths.get(CONFIG_FILE))) {
             List<String> lines = Files.readAllLines(Paths.get(CONFIG_FILE));
