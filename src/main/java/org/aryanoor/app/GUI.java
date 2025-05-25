@@ -2,7 +2,6 @@ package org.aryanoor.app;
 
 import org.aryanoor.services.IAM;
 import org.aryanoor.services.OpenRouterChat;
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -10,8 +9,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class GUI extends JFrame {
+    Boolean responcebot = false;
     private static final String CONFIG_FILE = "config.properties";
     private OpenRouterChat chatBot;
     private String apiKey;
@@ -23,10 +24,10 @@ public class GUI extends JFrame {
     public GUI() throws IOException {
         loadConfig();
         setTitle("Chatbot");
-        setSize(800, 600);
+        setSize(500, 400);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        setBackground(Color.gray);
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
 
@@ -35,26 +36,59 @@ public class GUI extends JFrame {
         mainPanel.add(buildChatPanel(), "chat");
 
         add(mainPanel);
-        cardLayout.show(mainPanel, "login"); // start with login
+        cardLayout.show(mainPanel, "login");
         setVisible(true);
     }
 
     private JPanel buildLoginPanel() {
-        JPanel panel = new JPanel(new GridLayout(4, 2, 10, 10));
-        panel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
+        JLabel titleLabel = new JLabel("Welcome to Chatbot", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Segoe UI",Font.BOLD,22));
+        titleLabel.setForeground(new Color(33,150,243));
+//        titleLabel.setBorder(BorderFactory.createEmptyBorder(20,0,20,0));
+        add(titleLabel, BorderLayout.NORTH);
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+//        panel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
+//        panel.setBackground(Color.white);
+        panel.setBorder(BorderFactory.createEmptyBorder(40, 100, 40, 100));
+
+
 
         JLabel usernameLabel = new JLabel("Username:");
-        JTextField usernameField = new JTextField();
+        JTextField usernameField = new JTextField(SwingConstants.CENTER);
+        usernameField.setMaximumSize(new Dimension(400,50));
+//        usernameField.setBounds(10, 10, 10, 10);
+
         JLabel passwordLabel = new JLabel("Password:");
+
+
         JPasswordField passwordField = new JPasswordField();
+        passwordField.setMaximumSize(new Dimension(400,50));
+
         JButton loginButton = new JButton("Login");
+        loginButton.setBackground(new Color(33, 150, 243));
+        loginButton.setForeground(Color.white);
+
+
         JButton goToRegisterButton = new JButton("Register");
+        goToRegisterButton.setCursor( Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        goToRegisterButton.setForeground(new Color(66, 133, 244));
+
+
+
 
         panel.add(usernameLabel);
         panel.add(usernameField);
+//        panel.add(Box.createHorizontalStrut(10));
+        panel.add(Box.createVerticalStrut(10));
         panel.add(passwordLabel);
         panel.add(passwordField);
+        panel.add(Box.createVerticalStrut(10));
+//        panel.add(Box.createHorizontalStrut(10));
         panel.add(loginButton);
+        panel.add(Box.createVerticalStrut(10));
+//        panel.add(Box.createHorizontalStrut(10));
         panel.add(goToRegisterButton);
 
         loginButton.addActionListener(e -> {
@@ -122,8 +156,9 @@ public class GUI extends JFrame {
         return panel;
     }
 
-    private JPanel buildChatPanel() {
+    private JPanel buildChatPanel() throws IOException {
          chatBot = new OpenRouterChat(apiUrl, apiKey);
+
 
         JPanel panelChat = new JPanel(new BorderLayout());
 
@@ -142,29 +177,40 @@ public class GUI extends JFrame {
 
         panelChat.add(topPage, BorderLayout.NORTH);
 
-//        JPanel chatPanel = new JPanel();
-
         JTextArea chatArea = new JTextArea();
         chatArea.setEditable(false);
         chatArea.setLineWrap(true);
         chatArea.setWrapStyleWord(true);
         JScrollPane scrollPane = new JScrollPane(chatArea);
-        panelChat.add(chatArea, BorderLayout.CENTER);
+        panelChat.add(scrollPane, BorderLayout.CENTER);
 
         JPanel bottomPage = new JPanel(new FlowLayout());
-        JTextField messageField = new JTextField(50);
+        JTextField messageField = new JTextField(30);
         JButton sendButton = new JButton("Send");
         sendButton.setBackground(Color.BLUE);
         sendButton.setForeground(Color.WHITE);
-        sendButton.addActionListener(e -> {
-            String message = messageField.getText().trim();
-            try {
-                sendMessage(message,chatArea);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-            messageField.setText("");
-        });
+
+
+            sendButton.addActionListener(e -> {
+                String message = messageField.getText().trim();
+                if (!message.isEmpty()) {
+                    chatArea.append("You: " + message + "\n");
+                    messageField.setText("");
+                    try {
+                        String response = chatBot.sendChatRequest(message);
+                        chatArea.append("Bot: " + response + "\n");
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                        chatArea.append("Error communicating with chatbot.\n");
+                    }
+                }
+            });
+
+
+
+
+
+
         bottomPage.add(messageField);
         bottomPage.add(sendButton);
 
@@ -196,12 +242,7 @@ public class GUI extends JFrame {
     }
     private void sendMessage(String message, JTextArea chatArea) throws IOException {
         if (!message.isEmpty()) {
-            chatArea.append("You: "+message+"\n");
+            chatArea.append("You: "+message+"\n"+"Thinking...\n");
         }
-        String responce = chatBot.sendChatRequest(message);
-        if (responce != null) {
-            chatArea.append( "Bot : "+responce+"/n");
-        }
-
     }
 }
