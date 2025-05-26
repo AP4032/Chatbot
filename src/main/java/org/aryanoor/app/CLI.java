@@ -1,8 +1,5 @@
 package org.aryanoor.app;
 
-import org.aryanoor.services.IAM;
-import org.aryanoor.services.OpenRouterChat;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,6 +7,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Properties;
+
+import org.aryanoor.services.IAM;
+import org.aryanoor.services.OpenRouterChat;
 
 /**
  * The CLI class provides a command-line interface for user authentication and chatbot interaction.
@@ -120,8 +120,17 @@ class CLI {
      * @return The formatted user input.
      */
     private String promptPreprocess(String prompt) {
-        // TODO: Implement the preprocessing logic
-        return null;
+        if (prompt == null || prompt.trim().isEmpty())
+            return "";
+
+        // Trim and ensure the first letter is capitalized
+        prompt = prompt.trim();
+        String formatted = prompt.substring(0, 1).toUpperCase() + prompt.substring(1);
+        // Ensure the sentence ends with a question mark
+        if (!formatted.endsWith("?")) {
+            formatted += "?";
+        }
+        return formatted;
     }
 
 
@@ -132,7 +141,8 @@ class CLI {
      * @return The number of words in the string.
      */
     private int countWords(String input) {
-        // TODO: Implement the countWords and use it for counting question and response words.
-        return 0;
+        if (input == null || input.trim().isEmpty())
+            return 0;
+        return input.trim().split("\\s+").length;
     }
 }
