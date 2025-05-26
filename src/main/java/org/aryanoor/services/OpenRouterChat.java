@@ -1,6 +1,9 @@
 package org.aryanoor.services;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -109,8 +112,24 @@ public class OpenRouterChat {
      * - Consider setting a maximum number of retries to avoid infinite loops.
      * - Implement logging or console messages to indicate when a retry occurs.
      */
-    private void nullResponseHandler() {
-        // TODO: You should implement retry logic here.
-        //       This method will be called when the response is empty.
+    private void nullResponseHandler(String prompt, int maxRetries) {
+        int attempts = 0;
+        while (attempts < maxRetries) {
+            System.out.println("Retrying... Attempt " + (attempts + 1) + " of " + maxRetries);
+            String response = chatBot.sendChatRequest(prompt);
+            if (response != null && !response.trim().isEmpty()) {
+                System.out.println("Bot: " + response);
+                return; // Exit after successful response
+            }
+            attempts++;
+            try {
+                Thread.sleep(1000); // Optional: Wait 1 second between retries
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                System.err.println("Retry interrupted.");
+                return;
+            }
+        }
+        System.err.println("Failed to get a response after " + maxRetries + " attempts.");
     }
 }
