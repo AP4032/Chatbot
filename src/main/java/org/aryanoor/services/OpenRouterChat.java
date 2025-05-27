@@ -48,7 +48,9 @@ public class OpenRouterChat {
                 response.append(responseLine.trim());
             }
         }
-
+        if(nullResponseHandler(response)){
+            return "Error or null response from ai";
+        }
         // Extract and return the chatbot's response from the JSON
         return extractMessage(response.toString());
     }
@@ -109,8 +111,12 @@ public class OpenRouterChat {
      * - Consider setting a maximum number of retries to avoid infinite loops.
      * - Implement logging or console messages to indicate when a retry occurs.
      */
-    private void nullResponseHandler() {
+    private boolean nullResponseHandler(StringBuilder response) {
         // TODO: You should implement retry logic here.
         //       This method will be called when the response is empty.
+        if(response == null || response.toString().isBlank()) {
+            return true;
+        }
+        return false;
     }
 }
