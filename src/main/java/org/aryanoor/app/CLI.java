@@ -120,8 +120,14 @@ class CLI {
      * @return The formatted user input.
      */
     private String promptPreprocess(String prompt) {
+        if (prompt == null || prompt.isBlank()) return "?";
+        prompt = prompt.trim();
+        prompt = Character.toUpperCase(prompt.charAt(0)) + prompt.substring(1);
+        if (!prompt.endsWith("?")) {
+            prompt += "?";
+        }
+        return prompt;
         // TODO: Implement the preprocessing logic
-        return null;
     }
 
 
@@ -132,7 +138,8 @@ class CLI {
      * @return The number of words in the string.
      */
     private int countWords(String input) {
+        if (input == null || input.isBlank()) {return 0;}
+        return input.trim().split("\\s+").length;
         // TODO: Implement the countWords and use it for counting question and response words.
-        return 0;
     }
 }
