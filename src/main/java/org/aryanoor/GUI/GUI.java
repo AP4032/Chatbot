@@ -34,6 +34,8 @@ public class GUI {
         frame.setLocationRelativeTo(null);
         frame.setBackground(SECONDARY_COLOR);
         frame.setResizable(false);
+        ImageIcon icon = new ImageIcon("zhe.png");
+        frame.setIconImage(icon.getImage());
 
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
