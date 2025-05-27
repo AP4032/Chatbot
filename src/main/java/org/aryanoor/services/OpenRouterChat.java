@@ -38,6 +38,7 @@ public class OpenRouterChat {
      * @throws IOException If an error occurs during the network communication.
      */
     public String sendChatRequest(String question) throws IOException {
+        HttpURLConnection conn;
         // Validate API URL first
         if (apiUrl == null || apiUrl.isBlank()) {
             throw new IOException("API URL is not configured");
@@ -45,14 +46,12 @@ public class OpenRouterChat {
 
         try {
             URL url = URI.create(apiUrl).toURL(); // This will throw if URL is invalid
-            HttpURLConnection conn = getHttpURLConnection(question, url);
+            conn = getHttpURLConnection(question, url);
             // ... rest of your existing code ...
         } catch (IllegalArgumentException e) {
             throw new IOException("Invalid API URL: " + apiUrl, e);
         }
         // Create a connection to the API URL
-        URL url = URI.create(apiUrl).toURL();
-        HttpURLConnection conn = getHttpURLConnection(question, url);
 
         // Read the API response
         StringBuilder response = new StringBuilder();
@@ -128,13 +127,5 @@ public class OpenRouterChat {
     private void nullResponseHandler() {
         // TODO: You should implement retry logic here.
         // This method will be called when the response is empty.
-    }
-
-    public String getApiUrl() {
-        return apiUrl;
-    }
-
-    public String getApiKey() {
-        return apiKey;
     }
 }

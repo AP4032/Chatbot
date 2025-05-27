@@ -12,7 +12,6 @@ import java.io.IOException;
 public class GUI {
     private JFrame frame;
     private CardLayout cardLayout;
-    private CLI cli;
     private JPanel cardPanel;
     private OpenRouterChat routerChat;
 

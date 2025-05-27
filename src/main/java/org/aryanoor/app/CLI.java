@@ -57,10 +57,6 @@ public class CLI {
                 if (apiKey == null || apiKey.isBlank()) {
                     throw new IOException("apiKey is missing in config.properties");
                 }
-
-                System.out.println("Config loaded successfully");
-                System.out.println("API URL: " + apiUrl);
-                System.out.println("API Key: " + (apiKey != null ? "*****" : "null"));
             }
         } else {
             throw new FileNotFoundException("config.properties not found at: " + configPath.toAbsolutePath());
