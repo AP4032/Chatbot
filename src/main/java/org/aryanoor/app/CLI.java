@@ -74,7 +74,7 @@ class CLI {
             newUser.signUp();
         }
 
-        System.out.println(">Hello Again! Let's login to your account");
+        //System.out.println(">Hello Again! Let's login to your account");
 
         // Login process
         while (true) {
@@ -134,5 +134,13 @@ class CLI {
     private int countWords(String input) {
         // TODO: Implement the countWords and use it for counting question and response words.
         return 0;
+    }
+
+    public String getApiUrl() {
+        return apiUrl;
+    }
+
+    public String getApiKey() {
+        return apiKey;
     }
 }
