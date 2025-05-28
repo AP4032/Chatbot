@@ -58,7 +58,7 @@ public class IAM {
     public void signUp() throws IOException {
         String userData = name + "," + password;
         Files.write(Paths.get(DATA_FILE), userData.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-        System.out.println("User registered successfully!\n");
+        //System.out.println("User registered successfully!\n");
     }
 
     /**
@@ -72,7 +72,7 @@ public class IAM {
     public boolean login(String name, String enteredPassword) throws IOException {
         // Check if the user data file exists
         if (!Files.exists(Paths.get(DATA_FILE))) {
-            System.out.println("No registered user found.");
+        //    System.out.println("No registered user found.");
             return false;
         }
 
@@ -89,10 +89,10 @@ public class IAM {
 
         // Validate user credentials
         if (storedHashedPassword.equals(enteredHashedPassword) && storedName.equals(name)) {
-            System.out.println("Login successful!\n");
+        //    System.out.println("Login successful!\n");
             return true;
         } else {
-            System.out.println("Invalid credentials.");
+        //    System.out.println("Invalid credentials.");
             return false;
         }
     }
