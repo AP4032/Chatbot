@@ -352,12 +352,5 @@ public class GUI extends JFrame implements ActionListener {
                 break;
         }
     }
-    public void test(){
-        remove(loginPanel);
-        createChatPanel();
-        add(mainChatPanel, BorderLayout.CENTER);
-
-        pack();
-    }
 
 }
