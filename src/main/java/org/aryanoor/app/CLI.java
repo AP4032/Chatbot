@@ -21,12 +21,23 @@ class CLI {
     private String apiKey; // API key for authentication
     private static final String CONFIG_FILE = "config.properties"; // Configuration file path
 
+    public String getApiKey() {
+        return apiKey;
+    }
+
+    public String getApiUrl() {
+        return apiUrl;
+    }
+
     /**
      * Constructor for CLI.
      * Loads the API configuration from the properties file.
      *
      * @throws IOException If an error occurs while reading the configuration file.
      */
+
+
+
     public CLI() throws IOException {
         loadConfig();
     }
