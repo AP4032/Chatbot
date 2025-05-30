@@ -1,5 +1,6 @@
 package org.aryanoor.services;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -58,7 +59,7 @@ public class IAM {
     public void signUp() throws IOException {
         String userData = name + "," + password;
         Files.write(Paths.get(DATA_FILE), userData.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-        System.out.println("User registered successfully!\n");
+        JOptionPane.showMessageDialog(null,"User registered successfully!");
     }
 
     /**
