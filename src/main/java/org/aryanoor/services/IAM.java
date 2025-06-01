@@ -2,6 +2,7 @@ package org.aryanoor.services;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.security.MessageDigest;
@@ -35,7 +36,7 @@ public class IAM {
      * @param password The plaintext password.
      * @return The hashed password as a hexadecimal string.
      */
-    private String hashPassword(String password) {
+    public String hashPassword(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] hashedBytes = md.digest(password.getBytes());
@@ -95,5 +96,20 @@ public class IAM {
             System.out.println("Invalid credentials.");
             return false;
         }
+    }
+
+    public boolean userExists(String username) throws IOException {
+        Path path = Paths.get("user.data");
+        if (!Files.exists(path)) {
+            return false;
+        }
+        List<String> lines = Files.readAllLines(path);
+        for (String line : lines) {
+            String[] parts = line.split(",");
+            if (parts.length > 0 && parts[0].equals(username)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
