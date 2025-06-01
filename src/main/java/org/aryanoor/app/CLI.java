@@ -16,6 +16,7 @@ import java.util.Properties;
  * It loads API configurations, manages user login, and facilitates chatbot communication.
  */
 class CLI {
+    GUI gui;
 
     private String apiUrl; // API URL for chatbot
     private String apiKey; // API key for authentication
@@ -28,6 +29,8 @@ class CLI {
      * @throws IOException If an error occurs while reading the configuration file.
      */
     public CLI() throws IOException {
+        gui = new GUI();
+        gui.cli = this;
         loadConfig();
     }
 
@@ -62,52 +65,36 @@ class CLI {
      * @throws IOException If an error occurs during input/output operations.
      */
     public void run() throws IOException {
+
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
         // If no user is registered, prompt for registration
         if (!Files.exists(Paths.get("user.data"))) {
-            System.out.print("No registered user found. Please register.\nEnter username: ");
-            String username = reader.readLine();
-            System.out.print("Enter password: ");
-            String password = reader.readLine();
-            IAM newUser = new IAM(username, password);
-            newUser.signUp();
+            gui.signup();
+
         }
-
-        System.out.println(">Hello Again! Let's login to your account");
-
-        // Login process
-        while (true) {
-            System.out.print("Enter username: ");
-            String username = reader.readLine();
-            System.out.print("Enter password: ");
-            String password = reader.readLine();
-            IAM user = new IAM(username, password);
-            if (user.login(username, password)) {
-                break;
-            }
-            System.out.println("Try again.");
-        }
-
-        OpenRouterChat chatBot = new OpenRouterChat(apiUrl, apiKey);
-        System.out.println("Welcome to the chatbot! Type 'exit' to quit.");
-
-        // Chat loop
-        while (true) {
-            System.out.print("> Enter your question: ");
-            String question = reader.readLine();
-
-            if (question.equalsIgnoreCase("exit")) {
-                System.out.println("Exiting...");
-                break;
-            }
-
-            System.out.println("Thinking...");
-            String response = chatBot.sendChatRequest(question);
-            System.out.println(response);
-            System.out.println(">---------------------------------<");
-        }
+        gui.run();
     }
+public void chat() throws IOException {
+
+
+    OpenRouterChat chatBot = new OpenRouterChat(apiUrl, apiKey);
+
+
+
+        String question = gui.inputField.getText();
+
+        if (question.equalsIgnoreCase("exit")) {
+            System.out.println("Exiting...");
+
+        }
+        gui.textArea.append(question + "\n");
+        gui.textArea.append("Thinking...\n");
+        String response = chatBot.sendChatRequest(question);
+        gui.textArea.append(response +"\n");
+        gui.textArea.append("*********\n");
+    }
+
 
     /**
      * Processes the user input to ensure proper formatting.
