@@ -7,7 +7,6 @@ import java.io.IOException;
  * It initializes the CLI and starts the chatbot interaction.
  */
 public class Main {
-
     /**
      * The main method starts the application by creating an instance of the CLI class.
      *
