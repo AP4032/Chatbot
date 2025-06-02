@@ -17,8 +17,8 @@ import java.util.Properties;
  */
 class CLI {
 
-    private String apiUrl; // API URL for chatbot
-    private String apiKey; // API key for authentication
+    public String apiUrl; // API URL for chatbot
+    public String apiKey; // API key for authentication
     private static final String CONFIG_FILE = "config.properties"; // Configuration file path
 
     /**
