@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
 import java.util.List;
 
 public class GUI extends JFrame {
@@ -44,7 +45,7 @@ public class GUI extends JFrame {
                 if (iam.login(loginUsername.getText(), new String(loginPassword.getPassword()))) {
                     showOnly(chatPanel);
                 } else {
-                    JOptionPane.showMessageDialog(this, "Login Failed");
+                    JOptionPane.showMessageDialog(this, "Login Failed", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -73,26 +74,39 @@ public class GUI extends JFrame {
         JTextField registerUsername = new JTextField();
         JPasswordField registerPassword = new JPasswordField();
         JButton registerBtn = new JButton("Register");
+        JButton toLoginBtn = new JButton("Back to Login");
 
-        registerBtn.setBackground(new Color(0, 150, 100));
-        registerBtn.setForeground(Color.WHITE);
+
+        registerBtn.setBackground(Color.GREEN);
+        registerBtn.setForeground(Color.BLACK);
 
         registerBtn.addActionListener(e -> {
             IAM iam = new IAM(registerUsername.getText(), new String(registerPassword.getPassword()));
             try {
-                iam.signUp();
-                JOptionPane.showMessageDialog(this, "Registered Successfully.");
-                showOnly(loginPanel);
+                if (registerUsername.getText().isEmpty() || Arrays.toString(registerPassword.getPassword()).isEmpty()) {
+                    JOptionPane.showMessageDialog(this,
+                            "Please fill all the fields",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    iam.signUp();
+                    JOptionPane.showMessageDialog(this,
+                            "Registered Successfully.",
+                            "Success", JOptionPane.INFORMATION_MESSAGE);
+                    showOnly(loginPanel);
+                }
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
         });
+
+        toLoginBtn.addActionListener(e -> {showOnly(loginPanel);});
 
         registerPanel.add(new JLabel("Username:"));
         registerPanel.add(registerUsername);
         registerPanel.add(new JLabel("Password:"));
         registerPanel.add(registerPassword);
         registerPanel.add(registerBtn);
+        registerPanel.add(toLoginBtn);
 
         add(registerPanel);
 
@@ -115,11 +129,11 @@ public class GUI extends JFrame {
             Path userFile = Paths.get("user.data");
 
             if(username.isEmpty() || newPassword.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Username or Password Required");
+                JOptionPane.showMessageDialog(this, "Username or Password Required", "Error", JOptionPane.ERROR_MESSAGE);
             }
             else
             if (!Files.exists(userFile)) {
-                JOptionPane.showMessageDialog(this, "No user data found. Please register first.");
+                JOptionPane.showMessageDialog(this, "No user data found. Please register first.", null, JOptionPane.ERROR_MESSAGE);
                 showOnly(registerPanel);
                 return;
             }
@@ -127,7 +141,7 @@ public class GUI extends JFrame {
                 List<String> lines = Files.readAllLines(userFile);
 
                 if (lines.isEmpty() || !lines.get(0).startsWith(username + ",")) {
-                    JOptionPane.showMessageDialog(this, "User not found. Please register first.");
+                    JOptionPane.showMessageDialog(this, "User not found. Please register first.", null, JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
@@ -136,12 +150,12 @@ public class GUI extends JFrame {
                 String newData = username + "," + iam.hashPassword(newPassword);
                 Files.write(userFile, newData.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
 
-                JOptionPane.showMessageDialog(this, "Password updated successfully.");
+                JOptionPane.showMessageDialog(this, "Password updated successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
                 showOnly(loginPanel);
 
             } catch (IOException ex) {
                 ex.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error while accessing user data.");
+                JOptionPane.showMessageDialog(this, "Error while accessing user data.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
@@ -169,7 +183,7 @@ public class GUI extends JFrame {
         JButton sendBtn = new JButton("Send");
         JButton logoutBtn = new JButton("Log Out");
 
-        sendBtn.setBackground(new Color(0, 120, 215));
+        sendBtn.setBackground(Color.BLUE);
         sendBtn.setForeground(Color.WHITE);
 
         logoutBtn.setBackground(Color.RED);
