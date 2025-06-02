@@ -212,7 +212,7 @@ public class GUI extends JFrame {
                     try {
                         OpenRouterChat chatBot = new OpenRouterChat(
                         "https://openrouter.ai/api/v1/chat/completions",
-                        "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");
+                        "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");
                         String response = chatBot.sendChatRequest(msg);
                         SwingUtilities.invokeLater(() -> {
                             String text = chatArea.getText().replace("Bot is typing...\n", "");
