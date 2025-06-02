@@ -112,5 +112,9 @@ public class OpenRouterChat {
     private void nullResponseHandler() {
         // TODO: You should implement retry logic here.
         //       This method will be called when the response is empty.
+        /* System.out.println("Received empty response, retrying...");
+    Thread.sleep(1000);
+
+         */
     }
 }

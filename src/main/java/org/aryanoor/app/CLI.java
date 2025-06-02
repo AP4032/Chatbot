@@ -36,7 +36,7 @@ class CLI {
      *
      * @throws IOException If an error occurs while reading the file.
      */
-    private void loadConfig() throws IOException {
+    public void loadConfig() throws IOException {
         Properties properties = new Properties();
         if (Files.exists(Paths.get(CONFIG_FILE))) {
             List<String> lines = Files.readAllLines(Paths.get(CONFIG_FILE));
@@ -119,8 +119,8 @@ class CLI {
      * @param prompt The original user input.
      * @return The formatted user input.
      */
-    private String promptPreprocess(String prompt) {
-        // TODO: Implement the preprocessing logic
+    public String promptPreprocess(String prompt) {
+       //return prompt.trim().replaceAll("\\s+", " ");
         return null;
     }
 
@@ -131,8 +131,18 @@ class CLI {
      * @param input The original string.
      * @return The number of words in the string.
      */
-    private int countWords(String input) {
-        // TODO: Implement the countWords and use it for counting question and response words.
+    public int countWords(String input) {
+        /*if (input == null || input.isEmpty()) {
+            return 0;
+        }
+        return input.split(" \\s+").length;
+        */
         return 0;
+    }
+    public String getApiUrl(){
+        return apiUrl;
+    }
+    public String getApiKey(){
+        return apiKey;
     }
 }
