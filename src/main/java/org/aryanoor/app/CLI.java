@@ -36,7 +36,7 @@ class CLI {
      *
      * @throws IOException If an error occurs while reading the file.
      */
-    private void loadConfig() throws IOException {
+    void loadConfig() throws IOException {
         Properties properties = new Properties();
         if (Files.exists(Paths.get(CONFIG_FILE))) {
             List<String> lines = Files.readAllLines(Paths.get(CONFIG_FILE));
