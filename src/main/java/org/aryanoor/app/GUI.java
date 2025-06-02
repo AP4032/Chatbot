@@ -45,7 +45,9 @@ public class GUI extends JFrame {
                 if (iam.login(loginUsername.getText(), new String(loginPassword.getPassword()))) {
                     showOnly(chatPanel);
                 } else {
-                    JOptionPane.showMessageDialog(this, "Login Failed", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this,
+                            "Login Failed",
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -83,7 +85,7 @@ public class GUI extends JFrame {
         registerBtn.addActionListener(e -> {
             IAM iam = new IAM(registerUsername.getText(), new String(registerPassword.getPassword()));
             try {
-                if (registerUsername.getText().isEmpty() || Arrays.toString(registerPassword.getPassword()).isEmpty()) {
+                if(registerUsername.getText().isEmpty() || Arrays.toString(registerPassword.getPassword()).isEmpty()) {
                     JOptionPane.showMessageDialog(this,
                             "Please fill all the fields",
                             "Error", JOptionPane.ERROR_MESSAGE);
@@ -129,11 +131,15 @@ public class GUI extends JFrame {
             Path userFile = Paths.get("user.data");
 
             if(username.isEmpty() || newPassword.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Username or Password Required", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this,
+                        "Username or Password Required",
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
             else
             if (!Files.exists(userFile)) {
-                JOptionPane.showMessageDialog(this, "No user data found. Please register first.", null, JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this,
+                        "No user data found. Please register first.",
+                        null, JOptionPane.ERROR_MESSAGE);
                 showOnly(registerPanel);
                 return;
             }
@@ -141,7 +147,9 @@ public class GUI extends JFrame {
                 List<String> lines = Files.readAllLines(userFile);
 
                 if (lines.isEmpty() || !lines.get(0).startsWith(username + ",")) {
-                    JOptionPane.showMessageDialog(this, "User not found. Please register first.", null, JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this,
+                            "User not found. Please register first.",
+                            null, JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
@@ -150,12 +158,16 @@ public class GUI extends JFrame {
                 String newData = username + "," + iam.hashPassword(newPassword);
                 Files.write(userFile, newData.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
 
-                JOptionPane.showMessageDialog(this, "Password updated successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this,
+                        "Password updated successfully.",
+                        "Success", JOptionPane.INFORMATION_MESSAGE);
                 showOnly(loginPanel);
 
             } catch (IOException ex) {
                 ex.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error while accessing user data.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this,
+                        "Error while accessing user data.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
@@ -199,8 +211,8 @@ public class GUI extends JFrame {
                 new Thread(() -> {
                     try {
                         OpenRouterChat chatBot = new OpenRouterChat(
-                                "https://openrouter.ai/api/v1/chat/completions",
-                                "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");
+                        "https://openrouter.ai/api/v1/chat/completions",
+                        "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");
                         String response = chatBot.sendChatRequest(msg);
                         SwingUtilities.invokeLater(() -> {
                             String text = chatArea.getText().replace("Bot is typing...\n", "");
