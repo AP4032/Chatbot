@@ -16,7 +16,7 @@ public class IAM {
 
     private final String name; // Stores the username
     private final String password; // Stores the hashed password
-    private static final String DATA_FILE = "user.data"; // File to store user credentials
+    public static final String DATA_FILE = "user.data"; // File to store user credentials
 
     /**
      * Constructor for IAM.
